@@ -8,16 +8,22 @@
     <link rel="stylesheet" href="css/styles.css?v=1.0">
 </head>
 
-<body>
-    <script src="js/scripts.js"></script>
+<body ng-app="app" ng-controller='AccountsCtrl'>
+    
+    <header>
+        <h1>EA Bank</h1>
+        <form ng-submit="login()" ng-hide="user">
+            <input type="text" id="username" placeholder="username" ng-model="username">
+            <input type="password" id="password" placeholder="password" ng-model="password">
+            <button>Sign In</button>
+            <p>{{ login_hint }}</p>
+        </form>
+        <div id="userdetails" ng-show="user">Hello {{ user.firstname }} {{ user.lastname }}
+            <button ng-click="logout()">Sign Out</button>
+        </div>
+    </header>
+    <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.js'></script>
+    <script src="js/eabank.js"></script>
 </body>
-<header>
-    <h1>EA Bank</h1>
-    <form>
-        <input type="text" id="username" placeholder="username">
-        <input type="password" id="password" placeholder="password">
-        <button>Sign In</button>
-    </form>
-</header>
 
 </html>
