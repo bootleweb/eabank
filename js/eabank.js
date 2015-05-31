@@ -1,5 +1,11 @@
 var app = angular.module('app', []);
 
+app.factory('Person', function(){
+	return function Person (name) {
+		this.name - name;
+	}
+}) ;
+
 app.controller('AccountsCtrl', function($scope) {
 
     // $scope.currencies = ["GBP","JPY"];
@@ -57,11 +63,11 @@ app.controller('AccountsCtrl', function($scope) {
         var i = 0;
         var max = $scope.users.length;
         $scope.login.hint = "";
-        $user = "";
+        $scope.user = "";
         for (i = 0; i < max; i++) {
             if ($scope.users[i].username == $scope.login.username && $scope.users[i].password == $scope.login.password && $scope.users[i].dongle == $scope.login.dongle) {
                 // don't hold onto the username and password in the form!
-                $scope.login = {};
+                $scope.login = undefined;
                 $scope.user = $scope.users[i];
                 break;
             }
@@ -96,7 +102,7 @@ app.controller('AccountsCtrl', function($scope) {
         });
 
         $scope.accounts.push($scope.newaccount);
-        $scope.newaccount = {};
+        $scope.newaccount = undefined;
     };
 
 });
