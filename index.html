@@ -38,7 +38,7 @@
                     <th>Amount</th>
                     <th>Balance</th>
                 </tr>
-                <tr ng-repeat="transaction in account.transactions">
+                <tr ng-repeat="transaction in account.transactions track by transaction.timestamp">
                     <td>{{ transaction.timestamp | date:'yy-MM-dd' }}</td>
                     <td>{{ transaction.timestamp | date:'HH:mm:ss' }}</td>
                     <td>{{ transaction.description }}</td>
@@ -69,6 +69,9 @@
             <p>{{ newaccount.hint }}</p>
         </form>
     </createaccount>
+    <persistance ng-show="user">
+        <button ng-click="reset()">Reset</button>
+    </persistance>
     <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js'></script>
     <script src="js/eabank.js"></script>
 </body>

@@ -53,11 +53,13 @@ describe("Check initial conditions ", function() {
         scope.signin();
         expect(scope.user.firstname).toEqual("Colin");
 
+        var previousCount = scope.accounts.length;
+
         scope.newaccount.accountname = "Test Account";
         scope.newaccount.currency = "JPY";
         scope.createaccount();
-        expect(scope.accounts.length).toEqual(1);
-        expect(scope.accounts[0].accountname).toEqual("Test Account");
+        expect(scope.accounts.length).toEqual(previousCount+1);
+        expect(scope.accounts[previousCount].accountname).toEqual("Test Account");
         expect(scope.newaccount).toBeFalsy();
     });
 

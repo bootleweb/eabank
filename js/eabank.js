@@ -56,6 +56,7 @@ app.controller('AccountsCtrl', function($scope) {
     $scope.login = {};
     $scope.newaccount = {};
     $scope.accounts = [];
+    $scope.localstorage;
 
     $scope.signin = function() {
         var i = 0;
@@ -73,6 +74,8 @@ app.controller('AccountsCtrl', function($scope) {
         if (!$scope.user) {
             $scope.login.hint = "Sorry, login failed";
         }
+
+        $scope.obtain();
     };
 
     $scope.signout = function() {
@@ -102,6 +105,7 @@ app.controller('AccountsCtrl', function($scope) {
 
         $scope.accounts.push($scope.newaccount);
         $scope.newaccount = undefined;
+        $scope.persist();
     };
 
     $scope.transaction = function(isDeposit) {
@@ -109,18 +113,18 @@ app.controller('AccountsCtrl', function($scope) {
         var transaction = this.account.transaction;
         // should do some sanity checks...
         if (!isFinite(transaction.amount)) {
-        	transaction.hint = "Transaction amount must be a number (pennies).";
+            transaction.hint = "Transaction amount must be a number (pennies).";
             return;
         }
 
         if (!(transaction.amount > 0)) {
-        	transaction.hint = "Transaction amount must be over 0.";
+            transaction.hint = "Transaction amount must be over 0.";
             return;
         }
 
         if (!isDeposit && (account.balance - transaction.amount + account.overdraft) < 0) {
-        	transaction.hint = "Rejected: would make balance beyond overdraft facility."
-        	return;
+            transaction.hint = "Rejected: would make balance beyond overdraft facility."
+            return;
         }
 
         if (!account.transactions) {
@@ -139,6 +143,28 @@ app.controller('AccountsCtrl', function($scope) {
         transaction.timestamp = new Date();
         account.transactions.push(transaction);
         this.account.transaction = {};
+        $scope.persist();
+    }
+
+    $scope.persist = function() {
+        localStorage.users = JSON.stringify($scope.users);
+        localStorage.accounts = JSON.stringify($scope.accounts);
+    }
+
+    $scope.obtain = function() {
+        if (localStorage.users) {
+            $scope.users = JSON.parse(localStorage.users);
+        }
+        if (localStorage.accounts) {
+            $scope.accounts = JSON.parse(localStorage.accounts);
+        }
+    }
+
+    $scope.reset = function() {
+        if (confirm("Do you really want to delete all transactions for this user?")) {
+            $scope.accounts = [];
+            delete localStorage.accounts;
+        }
     }
 
 });
