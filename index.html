@@ -23,6 +23,12 @@
         </div>
     </header>
     <accounts>
+        <h2 ng-show="user && accounts">Accounts</h2>
+        <div ng-repeat="account in accounts">
+            <h3>{{ account.accountname }} ({{ account.currency.name }})</h3>
+            <p>Balance brought forward: {{ account.balanceforward }}</p>
+            <p>Exchange rate: {{ account.currency.rate / 100.00 }} per GBP</p>
+        </div>
     </accounts>
     <createaccount ng-show="user">
         <h2>Create a new account</h2>

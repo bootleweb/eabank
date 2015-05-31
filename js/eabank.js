@@ -96,6 +96,7 @@ app.controller('AccountsCtrl', function($scope) {
         });
 
         $scope.accounts.push($scope.newaccount);
+        $scope.newaccount = {};
     };
 
 });
