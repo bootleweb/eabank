@@ -9,20 +9,32 @@
 </head>
 
 <body ng-app="app" ng-controller='AccountsCtrl'>
-    
     <header>
         <h1>EA Bank</h1>
-        <form ng-submit="login()" ng-hide="user">
-            <input type="text" id="username" placeholder="username" ng-model="username">
-            <input type="password" id="password" placeholder="password" ng-model="password">
+        <form ng-submit="signin()" ng-hide="user">
+            <input type="text" id="username" placeholder="username" ng-model="login.username">
+            <input type="password" id="password" placeholder="password" ng-model="login.password">
+            <input type="password" id="dongle" placeholder="security code" ng-model="login.dongle">
             <button>Sign In</button>
-            <p>{{ login_hint }}</p>
+            <p>{{ login.hint }}</p>
         </form>
         <div id="userdetails" ng-show="user">Hello {{ user.firstname }} {{ user.lastname }}
-            <button ng-click="logout()">Sign Out</button>
+            <button ng-click="signout()">Sign Out</button>
         </div>
     </header>
-    <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.js'></script>
+    <accounts>
+    </accounts>
+    <createaccount ng-show="user">
+        <h2>Create a new account</h2>
+        <form ng-submit="createaccount()">
+            <input type="text" id="accountname" placeholder="account name" ng-model="newaccount.accountname">
+            <select ng-model="newaccount.currency" ng-options="currency.name for currency in currencies">
+            </select>
+            <button>Create</button>
+            <p>{{ newaccount.hint }}</p>
+        </form>
+    </createaccount>
+    <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js'></script>
     <script src="js/eabank.js"></script>
 </body>
 
