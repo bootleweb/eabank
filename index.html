@@ -22,18 +22,47 @@
             <button ng-click="signout()">Sign Out</button>
         </div>
     </header>
-    <accounts>
-        <h2 ng-show="user && accounts">Accounts</h2>
+    <accounts ng-show="user && accounts.length">
+        <h2>Accounts</h2>
         <div ng-repeat="account in accounts">
             <h3>{{ account.accountname }} ({{ account.currency.name }})</h3>
-            <p>Balance brought forward: {{ account.balanceforward }}</p>
-            <p>Exchange rate: {{ account.currency.rate / 100.00 }} per GBP</p>
+            <p>Balance: {{ account.balance | currency : account.currency.symbol }} Overdraft: {{ account.overdraft | currency : account.currency.symbol }}</p>
+            <p>Exchange rate: {{ account.currency.rate / 100.00 | currency : account.currency.symbol }} per GBP</p>
+            <h3>Transactions</h3>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Transaction</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Balance</th>
+                </tr>
+                <tr ng-repeat="transaction in account.transactions">
+                    <td>{{ transaction.timestamp | date:'yy-MM-dd' }}</td>
+                    <td>{{ transaction.timestamp | date:'HH:mm:ss' }}</td>
+                    <td>{{ transaction.description }}</td>
+                    <td>{{ transaction.type }}</td>
+                    <td>{{ transaction.amount }}</td>
+                    <td>{{ transaction.balance }}</td>
+                </tr>
+            </table>
+            <h3>Add new transaction</h3>
+            <form>
+                <input type="hidden" ng-model="account" value={{ account.accountname }} />
+                <input type="text" class="transaction_description" placeholder="description" ng-model="account.transaction.description">
+                <input type="number" min="0" class="transaction_amount" placeholder="amount (pence)" ng-model="account.transaction.amount">
+                <button ng-click="transaction(true)">Deposit</button>
+                <button ng-click="transaction(false)">Withdrawal</button>
+                <p>{{ account.transaction.hint }}</p>
+            </form>
         </div>
     </accounts>
     <createaccount ng-show="user">
         <h2>Create a new account</h2>
         <form ng-submit="createaccount()">
             <input type="text" id="accountname" placeholder="account name" ng-model="newaccount.accountname">
+            <input type="number" min="0" id="overdraft" placeholder="overdraft (pennies)" ng-model="newaccount.overdraft">
             <select ng-model="newaccount.currency" ng-options="currency.name for currency in currencies">
             </select>
             <button>Create</button>

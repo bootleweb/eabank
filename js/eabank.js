@@ -1,36 +1,34 @@
 var app = angular.module('app', []);
 
-app.factory('Person', function(){
-	return function Person (name) {
-		this.name - name;
-	}
-}) ;
+app.factory('Person', function() {
+    return function Person(name) {
+        this.name - name;
+    }
+});
 
 app.controller('AccountsCtrl', function($scope) {
-
-    // $scope.currencies = ["GBP","JPY"];
 
     $scope.currencies = [
         // rates in pennies to prevent rounding of floats
         {
             name: 'GBP',
-            symbol: 'Â£',
+            symbol: "£",
             rate: 100
         }, {
             name: 'EUR',
-            symbol: 'Â£',
+            symbol: "€",
             rate: 140
         }, {
             name: 'USD',
-            symbol: 'Â£',
+            symbol: "$",
             rate: 153
         }, {
             name: 'CAD',
-            symbol: 'Â£',
+            symbol: "$",
             rate: 190
         }, {
             name: 'JPY',
-            symbol: 'Â£',
+            symbol: "¥",
             rate: 18900
         }
     ];
@@ -84,6 +82,7 @@ app.controller('AccountsCtrl', function($scope) {
     $scope.createaccount = function() {
 
         $scope.newaccount.hint = "";
+        $scope.newaccount.balance = 0;
 
         if (!$scope.newaccount.accountname) {
             $scope.newaccount.hint = "Please give your new account a name.";
@@ -104,5 +103,42 @@ app.controller('AccountsCtrl', function($scope) {
         $scope.accounts.push($scope.newaccount);
         $scope.newaccount = undefined;
     };
+
+    $scope.transaction = function(isDeposit) {
+        var account = this.account;
+        var transaction = this.account.transaction;
+        // should do some sanity checks...
+        if (!isFinite(transaction.amount)) {
+        	transaction.hint = "Transaction amount must be a number (pennies).";
+            return;
+        }
+
+        if (!(transaction.amount > 0)) {
+        	transaction.hint = "Transaction amount must be over 0.";
+            return;
+        }
+
+        if (!isDeposit && (account.balance - transaction.amount + account.overdraft) < 0) {
+        	transaction.hint = "Rejected: would make balance beyond overdraft facility."
+        	return;
+        }
+
+        if (!account.transactions) {
+            account.transactions = [];
+        }
+
+        if (isDeposit) {
+            account.balance += transaction.amount;
+            transaction.type = "deposit";
+        } else {
+            account.balance -= transaction.amount;
+            transaction.type = "withdrawal";
+        }
+
+        transaction.balance = account.balance;
+        transaction.timestamp = new Date();
+        account.transactions.push(transaction);
+        this.account.transaction = {};
+    }
 
 });
